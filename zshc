@@ -1,0 +1,107 @@
+	# PATHの設定(homebrew+virtualwrapper)
+	export PATH=/opt/homebrew/bin:/sbin:/bin:/usr/bin:/usr/texbin:$PATH
+	export VIRTUALENVWRAPPER_PYTHON=/opt/homebrew/bin/python3
+	export VIRTUALENVWRAPPER_VIRTUALENV=/opt/homebrew/bin/virtualenv
+	export GNUTERM=qt
+    # 文字コードの設定
+	export LANG=ja_JP.UTF-8
+	# 補完機能を有効にする
+	autoload -U compinit; compinit
+	# 大文字小文字を区別せず補完する
+	zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+	# コマンドの履歴を保存するファイル
+	HISTFILE=~/.zsh_history
+	HISTSIZE=10000
+	SAVEHIST=10000
+	setopt hist_ignore_dups
+    # ディレクトリ名の補完で末尾の / を自動的に付加し、次の補完に備える
+    setopt auto_param_slash
+	# プロンプトの設定
+    # RPROMPT='[%~]'
+    # エディタの設定
+    #alias emacs=/usr/local/opt/emacs-mac/bin/emacs
+    #alias vim=/usr/local/Cellar/vim/8.1.0050/bin/vim
+    # php
+    #alias php=/usr/local/Cellar/php/7.2.7/bin/php
+    export EDITOR=vim
+	# beep音
+    setopt no_beep
+    setopt no_hist_beep
+    setopt no_list_beep
+    setopt correct
+    # logisim
+	alias logisim='open ~/Downloads/logisim-generic-2.7.1.jar'
+    # keybind
+    bindkey -e
+    # シェル
+    function powerline_precmd() {
+    PS1="$(/Users/e175703/Library/Python/2.7/bin/powerline-shell --shell zsh $?)"
+    }
+    # pushd/popd
+    alias po=popd
+    alias pu=pushd
+    # less
+    alias less="/usr/share/vim/vim80/macros/less.sh"
+    # 画像
+    alias imgcat='sh ~/Pictures/imgcat.sh'
+    # shell再読込み
+    alias relog='exec $SHELL -l'
+    # Git-diff-highlight
+    export PATH=$PATH:/usr/local/share/git-core/contrib/diff-highlight
+    # Mercurial
+    function hgremote()
+    {
+        sh $HOME/.templetes/hgremote.sh $@
+    }
+    # 自動push
+    setopt auto_pushd
+    zstyle ':completion:*' menu select
+    zstyle ':completion:*:cd:*' ignore-parents parent pwd
+    zstyle ':completion:*:descriptions' format '%BCompleting%b %U%d%u'
+    # ディレクトリ記憶
+    autoload -Uz add-zsh-hook
+add-zsh-hook chpwd chpwd_func
+function chpwd_func() {
+  sed -i -e "s:^cd .* #catcat:cd $PWD #catcat:g" ~/.zshrc
+}
+cd /Users/e175703/dotfiles #catcat
+
+    function install_powerline_precmd() {
+      for s in "${precmd_functions[@]}"; do
+        if [ "$s" = "powerline_precmd" ]; then
+          return
+        fi
+      done
+      precmd_functions+=(powerline_precmd)
+    }
+
+    if [ "$TERM" != "linux" ]; then
+        install_powerline_precmd
+    fi
+
+	# virtualenv の設定
+	# ~/.zshrc に以下の設定を追加。
+	# 下記if文で指定した WORKON_HOME に仮想環境が構築される。
+	# 不要になったらここを削除しよう。
+	if [ -f /opt/homebrew/bin/virtualenvwrapper.sh ]; then
+	    export WORKON_HOME=$HOME/.virtualenvs
+	    source /opt/homebrew/bin/virtualenvwrapper.sh
+	fi
+        export PATH="/usr/local/bin:$PATH"
+        export PATH="$HOME/.plenv/bin:$PATH"
+        eval "$(plenv init -)"
+
+    export PATH="/usr/local/sbin:$PATH"
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+source /Users/e175703/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export PATH=/usr/local/gcc-arm-none-eabi-5_4-2016q2/bin:/usr/local/Cellar/pyenv-virtualenv/1.1.3/shims:/Users/e175703/.pyenv/shims:/Users/e175703/.pyenv/bin:/usr/local/sbin:/Users/e175703/.plenv/shims:/Users/e175703/.plenv/bin:/usr/local/bin:/opt/homebrew/bin:/sbin:/bin:/usr/bin:/usr/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/opt/X11/bin:/usr/local/share/git-core/contrib/diff-highlight
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# openmpi
+export MPIPATH=/usr/local/opt/open-mpi
+export C_INCLUDE_PATH=$MPIPATH/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$MPIPATH/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$MPIPATH/lib:$LIBRARY_PATH
